@@ -76,30 +76,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const toogleTodo = todo => {
-    return Object.assign({}, todo, {
-        completed: !todo.completed });
+const todos = (state = [], action) => {
+    //reducer function
+    switch (action.type) {
+        case 'ADD_TODO':
+            return [...state, //item from old array
+            { //new item representing new adding todo
+                id: action.id,
+                text: action.text,
+                completed: false
+            }];
+        default:
+            return state;
+    }
 };
 
-const testToogleTodo = () => {
-    const todoBefore = {
+const testAddTodo = () => {
+    const stateBefore = [];
+    const action = {
+        type: 'ADD_TODO',
         id: 0,
-        text: "Learn Redux",
+        text: 'Learn Redux'
+    };
+
+    const stateAfter = [{
+        id: 0,
+        text: 'Learn Redux',
         completed: false
-    };
-    const todoAfter = {
-        id: 0,
-        text: "Learn Redux",
-        completed: true
-    };
+    }];
 
-    __WEBPACK_IMPORTED_MODULE_1_deep_freeze___default()(todoBefore);
+    __WEBPACK_IMPORTED_MODULE_1_deep_freeze___default()(action);
+    __WEBPACK_IMPORTED_MODULE_1_deep_freeze___default()(stateBefore);
 
-    __WEBPACK_IMPORTED_MODULE_0_expect___default()(toogleTodo(todoBefore)).toEqual(todoAfter);
+    __WEBPACK_IMPORTED_MODULE_0_expect___default()(todos(stateBefore, action)).toEqual(stateAfter);
 };
 
-testToogleTodo();
-console.log("All tests passed");
+testAddTodo();
+console.log("All tests passed!");
 
 /***/ }),
 /* 1 */
