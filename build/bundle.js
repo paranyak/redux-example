@@ -86,6 +86,14 @@ const todos = (state = [], action) => {
                 text: action.text,
                 completed: false
             }];
+        case 'TOGGLE_TODO':
+            return state.map(todo => {
+                if (todo.id != action.id) {
+                    return todo;
+                }
+                return Object.assign({}, todo, {
+                    completed: !todo.completed });
+            });
         default:
             return state;
     }
@@ -111,7 +119,41 @@ const testAddTodo = () => {
     __WEBPACK_IMPORTED_MODULE_0_expect___default()(todos(stateBefore, action)).toEqual(stateAfter);
 };
 
+const testToggleTodo = () => {
+    const stateBefore = [{
+        id: 0,
+        text: 'Learn Redux',
+        completed: false
+    }, {
+        id: 1,
+        text: 'Go shopping',
+        completed: false
+    }];
+
+    const action = {
+        type: 'TOGGLE_TODO',
+        id: 0
+    };
+
+    const stateAfter = [{
+        id: 0,
+        text: 'Learn Redux',
+        completed: true
+    }, {
+        id: 1,
+        text: 'Go shopping',
+        completed: false
+    }];
+
+    __WEBPACK_IMPORTED_MODULE_1_deep_freeze___default()(action);
+    __WEBPACK_IMPORTED_MODULE_1_deep_freeze___default()(stateBefore);
+
+    __WEBPACK_IMPORTED_MODULE_0_expect___default()(todos(stateBefore, action)).toEqual(stateAfter);
+};
+
 testAddTodo();
+
+testToggleTodo();
 console.log("All tests passed!");
 
 /***/ }),
