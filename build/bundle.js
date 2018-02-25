@@ -76,24 +76,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+const todo = (state, action) => {
+    switch (action.type) {
+        case 'ADD_TODO':
+            return { //new item representing new adding todo
+                id: action.id,
+                text: action.text,
+                completed: false
+            };
+        case 'TOGGLE_TODO':
+            if (state.id != action.id) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                completed: !state.completed });
+        default:
+            return state;}
+};
+
 const todos = (state = [], action) => {
     //reducer function
     switch (action.type) {
         case 'ADD_TODO':
             return [...state, //item from old array
-            { //new item representing new adding todo
-                id: action.id,
-                text: action.text,
-                completed: false
-            }];
+            todo(undefined, action)];
         case 'TOGGLE_TODO':
-            return state.map(todo => {
-                if (todo.id != action.id) {
-                    return todo;
-                }
-                return Object.assign({}, todo, {
-                    completed: !todo.completed });
-            });
+            return state.map(t => todo(t, action));
         default:
             return state;
     }
@@ -154,7 +162,7 @@ const testToggleTodo = () => {
 testAddTodo();
 
 testToggleTodo();
-console.log("All tests passed!");
+console.log("All tests passed");
 
 /***/ }),
 /* 1 */
