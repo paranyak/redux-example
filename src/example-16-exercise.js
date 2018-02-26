@@ -1,4 +1,5 @@
-import {createStore, combineReducers} from 'redux';
+import {createStore} from 'redux';
+
 
 const todo = (state, action) => {
     switch (action.type) {
@@ -44,6 +45,18 @@ const visibilityFilter = (state = 'SHOW_ALL',
         default:
             return state;
     }
+};
+
+const combineReducers = (reducers) => {
+    return (state = {}, action) => {
+        return Object.keys(reducers).reduce(    //O.keys gives all the keys of reducers method
+            (nextState, key) => {
+                nextState[key] = reducers[key](state[key], action); //updating the part of the state | reducers[key] -> reducer function
+                return nextState;
+            },
+            {}  //  nextState
+        );
+    };
 };
 
 const todoApp = combineReducers({

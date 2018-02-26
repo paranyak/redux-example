@@ -741,7 +741,19 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
     }
 };
 
-const todoApp = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* combineReducers */])({
+const combineReducers = reducers => {
+    return (state = {}, action) => {
+        return Object.keys(reducers).reduce( //O.keys gives all the keys of reducers method
+        (nextState, key) => {
+            nextState[key] = reducers[key](state[key], action); //updating the part of the state | reducers[key] -> reducer function
+            return nextState;
+        }, {} //  nextState
+        );
+    };
+};
+
+const todoApp = combineReducers({
+
     // keys are the field of state which we're going to manage
     // values are the reducer functions
 
@@ -749,7 +761,7 @@ const todoApp = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* combineReducer
     visibilityFilter: visibilityFilter
 });
 
-const store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["b" /* createStore */])(todoApp);
+const store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* createStore */])(todoApp);
 
 console.log('Initial state:');
 console.log(store.getState());
@@ -804,8 +816,8 @@ console.log('--------------');
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(5);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["b"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__combineReducers__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["b"]; });
+/* unused harmony reexport combineReducers */
 /* unused harmony reexport bindActionCreators */
 /* unused harmony reexport applyMiddleware */
 /* unused harmony reexport compose */
@@ -1139,7 +1151,7 @@ function symbolObservablePonyfill(root) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = combineReducers;
+/* WEBPACK VAR INJECTION */(function(process) {/* unused harmony export default */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_es_isPlainObject__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(5);
