@@ -1451,7 +1451,7 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
             __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                 'button',
                 { onClick: () => {
-                        store.dispatch({
+                        store.dispatch({ //goes to todoApp
                             type: 'ADD_TODO',
                             text: this.input.value,
                             id: nextTodoId++
@@ -1466,7 +1466,14 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
                 this.props.todos.map(todo => {
                     return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                         'li',
-                        { key: todo.id },
+                        { key: todo.id,
+                            onClick: () => {
+                                store.dispatch({
+                                    type: 'TOGGLE_TODO',
+                                    id: todo.id
+                                });
+                            },
+                            style: { textDecoration: todo.completed ? 'line-through' : 'none' } },
                         todo.text
                     );
                 })

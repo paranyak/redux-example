@@ -72,7 +72,7 @@ class TodoApp extends Component {
                     this.input = node;
                 }}/>
                 <button onClick={() => {
-                    store.dispatch({
+                    store.dispatch({    //goes to todoApp
                         type: 'ADD_TODO',
                         text: this.input.value,
                         id: nextTodoId++
@@ -84,7 +84,14 @@ class TodoApp extends Component {
                 <ul>
                     {this.props.todos.map(todo => {
                         return (
-                            <li key={todo.id}>
+                            <li key={todo.id}
+                                onClick={() => {
+                                    store.dispatch({
+                                        type: 'TOGGLE_TODO',
+                                        id: todo.id
+                                    });
+                                }}
+                                style={{textDecoration: todo.completed ? 'line-through' : 'none'}}>
                                 {todo.text}
                             </li>
                         );
