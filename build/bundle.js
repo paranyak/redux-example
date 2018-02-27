@@ -1382,6 +1382,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_dom__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 
 
 
@@ -1473,6 +1475,28 @@ const getVisibleTodos = (todos, filter) => {
     }
 };
 
+const Todo = ({ onClick, completed, text }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'li',
+    {
+        onClick: onClick,
+        style: {
+            textDecoration: completed ? 'line-through' : 'none'
+        } },
+    text
+);
+
+const TodoList = ({ todos, onTodoClick }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'ul',
+    null,
+    todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Todo, _extends({
+        key: todo.id
+    }, todo, {
+        onClick: () => {
+            onTodoClick(todo.id);
+        }
+    })))
+);
+
 let nextTodoId = 0; // id for every to do
 class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     render() {
@@ -1498,26 +1522,13 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
                     } },
                 'Add Todo'
             ),
-            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-                'ul',
-                null,
-                visibleTodos.map(todo => {
-                    return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-                        'li',
-                        { key: todo.id,
-                            onClick: () => {
-                                store.dispatch({
-                                    type: 'TOGGLE_TODO',
-                                    id: todo.id
-                                });
-                            },
-                            style: {
-                                textDecoration: todo.completed ? 'line-through' : 'none'
-                            } },
-                        todo.text
-                    );
-                })
-            ),
+            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoList, { todos: visibleTodos,
+                onTodoClick: id => {
+                    store.dispatch({
+                        type: 'TOGGLE_TODO',
+                        id
+                    });
+                } }),
             __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                 'p',
                 null,
