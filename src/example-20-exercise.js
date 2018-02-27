@@ -170,13 +170,8 @@ const Footer = ({visibilityFilter, onFilterClick}) => (
 );
 
 let nextTodoId = 0;  // id for every to do
-class TodoApp extends Component {
-    render() {
-        const {todos, visibilityFilter} = this.props;
 
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-
-        return (
+const TodoApp = ({todos, visibilityFilter})=> (
             <div>
                 <AddTodo onAddClick={text =>
                     store.dispatch({
@@ -185,7 +180,7 @@ class TodoApp extends Component {
                         text
                     })
                 } />
-                <TodoList todos={visibleTodos}
+                <TodoList todos={getVisibleTodos(todos, visibilityFilter)}
                           onTodoClick={id => {
                               store.dispatch({
                                   type: 'TOGGLE_TODO',
@@ -200,9 +195,7 @@ class TodoApp extends Component {
                             })
                         }/>
             </div>
-        );
-    };
-};
+);
 
 const render = () => {
     ReactDOM.render(

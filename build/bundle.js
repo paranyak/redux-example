@@ -1554,35 +1554,28 @@ const Footer = ({ visibilityFilter, onFilterClick }) => __WEBPACK_IMPORTED_MODUL
 );
 
 let nextTodoId = 0; // id for every to do
-class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
-    render() {
-        const { todos, visibilityFilter } = this.props;
 
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-
-        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-            'div',
-            null,
-            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(AddTodo, { onAddClick: text => store.dispatch({
-                    type: 'ADD_TODO',
-                    id: nextTodoId++,
-                    text
-                }) }),
-            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoList, { todos: visibleTodos,
-                onTodoClick: id => {
-                    store.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id
-                    });
-                } }),
-            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, { visibilityFilter: visibilityFilter,
-                onFilterClick: filter => store.dispatch({
-                    type: 'SET_VISIBILITY_FILTER',
-                    filter
-                }) })
-        );
-    }
-};
+const TodoApp = ({ todos, visibilityFilter }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'div',
+    null,
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(AddTodo, { onAddClick: text => store.dispatch({
+            type: 'ADD_TODO',
+            id: nextTodoId++,
+            text
+        }) }),
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoList, { todos: getVisibleTodos(todos, visibilityFilter),
+        onTodoClick: id => {
+            store.dispatch({
+                type: 'TOGGLE_TODO',
+                id
+            });
+        } }),
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, { visibilityFilter: visibilityFilter,
+        onFilterClick: filter => store.dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter
+        }) })
+);
 
 const render = () => {
     __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoApp, store.getState()), document.getElementById('root'));
