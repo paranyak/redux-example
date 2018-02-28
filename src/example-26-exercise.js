@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 
 import PropTypes from 'prop-types';
 
-import {Provider} from 'react-redux';
+import { connect} from 'react-redux';
 
 const todo = (state, action) => {
     switch (action.type) {
@@ -209,40 +209,26 @@ const Footer = () => (
     </p>
 );
 
-class VisibleTodoList extends Component {
-    componentDidMount() {
-        const {store} = this.context;
-        this.unsubscribe = store.subscribe(() =>
-            this.forceUpdate()
-        );
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    render() {
-        const {store} = this.context;
-        const {todos, visibilityFilter} = store.getState();
-
-        return (
-            <TodoList
-                todos={getVisibleTodos(todos, visibilityFilter)}
-                onTodoClick={id =>
-                    store.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id
-                    })
-                }
-            />
-        );
-    }
-}
-
-VisibleTodoList.contextTypes ={
-    //if don't do this - component will not receive context
-    store: PropTypes.object
+const mapStateToProps = (state) => {
+    return {
+        todos: getVisibleTodos(state.todos, state.visibilityFilter)
+    };
 };
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onTodoClick: (id) => {
+            dispatch({type: 'TOGGLE_TODO', id})
+        }
+    };
+};
+
+const VisibleTodoList = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(TodoList);
+
+
 
 let nextTodoId = 0;  // id for every to do
 
