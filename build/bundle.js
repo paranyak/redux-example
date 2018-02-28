@@ -1441,8 +1441,8 @@ const todoApp = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* combineReducer
 
 const store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["b" /* createStore */])(todoApp);
 
-const FilterLink = ({ filter, currentFilter, children, onClick }) => {
-    if (filter === currentFilter) {
+const Link = ({ active, children, onClick }) => {
+    if (active) {
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
             'span',
             null,
@@ -1454,12 +1454,39 @@ const FilterLink = ({ filter, currentFilter, children, onClick }) => {
         { href: '#',
             onClick: e => {
                 e.preventDefault();
-                onClick(filter);
+                onClick();
             }
         },
         children
     );
 };
+
+class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
+    componentDidMount() {
+        this.unsubscribe = store.subscribe(() => this.forceUpdate());
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    render() {
+        const { filter, children } = this.props;
+        const { visibilityFilter } = store.getState();
+
+        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+            Link,
+            {
+                active: filter === visibilityFilter,
+                onClick: () => store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter
+                })
+            },
+            children
+        );
+    }
+}
 
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
@@ -1515,7 +1542,7 @@ const AddTodo = ({ onAddClick }) => {
     );
 };
 
-const Footer = ({ visibilityFilter, onFilterClick }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'p',
     null,
     'Show:',
@@ -1523,32 +1550,21 @@ const Footer = ({ visibilityFilter, onFilterClick }) => __WEBPACK_IMPORTED_MODUL
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ALL',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
-        },
+            filter: 'SHOW_ALL' },
         'All'
     ),
     ', ',
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ACTIVE',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
-
-        },
+            filter: 'SHOW_ACTIVE' },
         'Active'
     ),
     ', ',
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_COMPLETED',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
-
-        },
+            filter: 'SHOW_COMPLETED' },
         'Completed'
     )
 );
@@ -1570,11 +1586,7 @@ const TodoApp = ({ todos, visibilityFilter }) => __WEBPACK_IMPORTED_MODULE_1_rea
                 id
             });
         } }),
-    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, { visibilityFilter: visibilityFilter,
-        onFilterClick: filter => store.dispatch({
-            type: 'SET_VISIBILITY_FILTER',
-            filter
-        }) })
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, null)
 );
 
 const render = () => {
