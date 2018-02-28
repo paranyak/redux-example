@@ -161,7 +161,7 @@ const TodoList = ({todos, onTodoClick}) => (
     </ul>
 );
 
-const AddTodo = (props, {store}) => {
+let AddTodo = ({dispatch}) => {
 
     let input;
 
@@ -170,7 +170,7 @@ const AddTodo = (props, {store}) => {
             input = node;
         }}/>
             <button onClick={() => {
-                store.dispatch({
+                dispatch({
                     type: 'ADD_TODO',
                     id: nextTodoId++,
                     text: input.value
@@ -182,10 +182,7 @@ const AddTodo = (props, {store}) => {
         </div>)
 };
 
-AddTodo.contextTypes ={
-    //if don't do this - component will not receive context
-    store: PropTypes.object
-};
+AddTodo =connect()(AddTodo);
 
 
 const Footer = () => (
