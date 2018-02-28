@@ -1439,8 +1439,6 @@ const todoApp = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* combineReducer
     visibilityFilter: visibilityFilter
 });
 
-const store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["b" /* createStore */])(todoApp);
-
 const Link = ({ active, children, onClick }) => {
     if (active) {
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
@@ -1463,6 +1461,7 @@ const Link = ({ active, children, onClick }) => {
 
 class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     componentDidMount() {
+        const { store } = this.props;
         this.unsubscribe = store.subscribe(() => this.forceUpdate());
     }
 
@@ -1471,6 +1470,7 @@ class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     }
 
     render() {
+        const { store } = this.props;
         const { filter, children } = this.props;
         const { visibilityFilter } = store.getState();
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
@@ -1520,7 +1520,7 @@ const TodoList = ({ todos, onTodoClick }) => __WEBPACK_IMPORTED_MODULE_1_react__
     })))
 );
 
-const AddTodo = () => {
+const AddTodo = ({ store }) => {
 
     let input;
 
@@ -1545,7 +1545,7 @@ const AddTodo = () => {
     );
 };
 
-const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+const Footer = ({ store }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'p',
     null,
     'Show:',
@@ -1553,27 +1553,34 @@ const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ALL' },
+            filter: 'SHOW_ALL',
+            store: store
+        },
         'All'
     ),
     ', ',
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ACTIVE' },
+            filter: 'SHOW_ACTIVE',
+            store: store
+        },
         'Active'
     ),
     ', ',
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_COMPLETED' },
+            filter: 'SHOW_COMPLETED',
+            store: store
+        },
         'Completed'
     )
 );
 
 class VisibleTodoList extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     componentDidMount() {
+        const { store } = this.props;
         this.unsubscribe = store.subscribe(() => this.forceUpdate());
     }
 
@@ -1582,6 +1589,7 @@ class VisibleTodoList extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     }
 
     render() {
+        const { store } = this.props;
         const { todos, visibilityFilter } = store.getState();
 
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoList, {
@@ -1596,15 +1604,16 @@ class VisibleTodoList extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
 
 let nextTodoId = 0; // id for every to do
 
-const TodoApp = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+
+const TodoApp = ({ store }) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'div',
     null,
-    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(AddTodo, null),
-    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(VisibleTodoList, null),
-    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, null)
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(AddTodo, { store: store }),
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(VisibleTodoList, { store: store }),
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, { store: store })
 );
 
-__WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoApp, null), document.getElementById('root'));
+__WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoApp, { store: Object(__WEBPACK_IMPORTED_MODULE_0_redux__["b" /* createStore */])(todoApp) }), document.getElementById('root'));
 
 /***/ }),
 /* 21 */
