@@ -2008,38 +2008,21 @@ const Link = ({ active, children, onClick }) => {
     );
 };
 
-class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => this.forceUpdate());
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    render() {
-        const { store } = this.context;
-        const { filter, children } = this.props;
-        const { visibilityFilter } = store.getState();
-        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-            Link,
-            {
-                active: filter === visibilityFilter,
-                onClick: () => store.dispatch({
-                    type: 'SET_VISIBILITY_FILTER',
-                    filter
-                })
-            },
-            children
-        );
-    }
-}
-
-FilterLink.contextTypes = {
-    //if don't do this - component will not receive context
-    store: __WEBPACK_IMPORTED_MODULE_3_prop_types___default.a.object
+const mapStateToLinkProps = (state, ownProps) => {
+    return {
+        active: ownProps.filter === state.visibilityFilter
+    };
 };
+
+const mapDispatchToLinkProps = (dispatch, ownProps) => {
+    return {
+        onClick: () => {
+            dispatch({ type: 'SET_VISIBILITY_FILTER', filter: ownProps.filter });
+        }
+    };
+};
+
+const FilterLink = Object(__WEBPACK_IMPORTED_MODULE_4_react_redux__["a" /* connect */])(mapStateToLinkProps, mapDispatchToLinkProps)(Link);
 
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
