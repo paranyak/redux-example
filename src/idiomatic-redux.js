@@ -6,7 +6,7 @@ import configureStore from "./configureStore";
 
 
 const store = configureStore();
-console.log("Afergthylla");
+console.log("Alla");
 render(
     <Root store={store} />,
     document.getElementById('root')
