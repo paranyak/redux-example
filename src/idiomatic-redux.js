@@ -2,6 +2,10 @@ import {createStore, combineReducers} from 'redux';
 import ReactDOM from 'react-dom';
 import React, {Component} from 'react';
 import {Provider, connect} from 'react-redux';
+import { loadState, saveState } from './localStorage'
+import { v4 } from 'node-uuid';
+import throttle from 'lodash/throttle'
+
 
 const todo = (state, action) => {
     switch (action.type) {
@@ -53,10 +57,9 @@ const todoApp = combineReducers({
     visibilityFilter
 });
 
-let nextTodoId = 0;
 const addTodo = (text) => ({
     type: 'ADD_TODO',
-    id: nextTodoId++,
+    id: v4(),
     text
 });
 
@@ -195,18 +198,18 @@ const TodoApp = () => (
     </div>
 );
 
-const persistedState = {
-    todos: [{
-        id: 0,
-        text: 'Welcome Back!',
-        completed: false
-    }]
-};
+const persistedState = loadState();
 
 const store = createStore(
     todoApp,
     persistedState
 );
+
+store.subscribe(throttle(() => {
+    saveState({
+        todos: store.getState().todos
+    })
+}, 1000));
 
 console.log(store.getState());
 ReactDOM.render(
