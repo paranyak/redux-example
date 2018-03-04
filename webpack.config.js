@@ -1,5 +1,5 @@
 module.exports = {
-    entry: './src/example-26-exercise.js',
+    entry: './src/idiomatic-redux.js',
     output: {
         filename: './build/bundle.js'
     },
