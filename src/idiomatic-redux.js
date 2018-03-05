@@ -6,7 +6,6 @@ import configureStore from "./configureStore";
 
 
 const store = configureStore();
-console.log("Allachka");
 render(
     <Root store={store} />,
     document.getElementById('root')
