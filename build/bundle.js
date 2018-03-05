@@ -16180,7 +16180,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const store = Object(__WEBPACK_IMPORTED_MODULE_3__configureStore__["a" /* default */])();
-console.log("Alla");
+console.log("Allachka");
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Root__["a" /* default */], { store: store }), document.getElementById('root'));
 
 /***/ }),
@@ -38231,11 +38231,11 @@ var withRouter = function withRouter(Component) {
 
 
 
-const App = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+const App = ({ match }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     'div',
     null,
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__AddTodo__["a" /* default */], null),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__VisibleTodoList__["a" /* default */], null),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__VisibleTodoList__["a" /* default */], { filter: match.params.filter || 'all' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__Footer__["a" /* default */], null)
 );
 
@@ -48593,20 +48593,20 @@ function randomFillSync (buf, offset, size) {
 
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
-        case 'SHOW_ALL':
+        case 'all':
             return todos;
-        case 'SHOW_COMPLETED':
+        case 'completed':
             return todos.filter(t => t.completed);
-        case 'SHOW_ACTIVE':
+        case 'active':
             return todos.filter(t => !t.completed);
         default:
             throw new Error(`Unknown filter: ${filter}.`);
     }
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
-        todos: getVisibleTodos(state.todos, state.visibilityFilter)
+        todos: getVisibleTodos(state.todos, ownProps.filter)
     };
 };
 
@@ -48678,7 +48678,7 @@ const Todo = ({ onClick, completed, text }) => __WEBPACK_IMPORTED_MODULE_0_react
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_throttle__ = __webpack_require__(283);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_throttle___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash_throttle__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers__ = __webpack_require__(293);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__localStorage__ = __webpack_require__(296);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__localStorage__ = __webpack_require__(295);
 
 
 
@@ -49273,14 +49273,11 @@ module.exports = isObjectLike;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__todos__ = __webpack_require__(294);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__visibilityFilter__ = __webpack_require__(295);
-
 
 
 
 const todoApp = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["b" /* combineReducers */])({
-    todos: __WEBPACK_IMPORTED_MODULE_1__todos__["a" /* default */],
-    visibilityFilter: __WEBPACK_IMPORTED_MODULE_2__visibilityFilter__["a" /* default */]
+    todos: __WEBPACK_IMPORTED_MODULE_1__todos__["a" /* default */]
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (todoApp);
@@ -49325,22 +49322,6 @@ const todos = (state = [], action) => {
 
 /***/ }),
 /* 295 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const visibilityFilter = (state = 'SHOW_ALL', action) => {
-    switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
-            return action.filter;
-        default:
-            return state;
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (visibilityFilter);
-
-/***/ }),
-/* 296 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

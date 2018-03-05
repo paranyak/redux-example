@@ -15,6 +15,7 @@
   "dependencies": {
     "deep-freeze": "0.0.1",
     "expect": "^22.4.0",
+    "express": "^4.16.2",
     "lodash": "^4.17.5",
     "node-uuid": "^1.4.8",
     "prop-types": "^15.6.1",
@@ -23,7 +24,8 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "webpack-dev-middleware": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
