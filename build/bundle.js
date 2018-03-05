@@ -16438,7 +16438,7 @@ const getVisibleTodos = (state, filter) => __WEBPACK_IMPORTED_MODULE_1__todos__[
 /* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(289);
+var freeGlobal = __webpack_require__(290);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -16472,17 +16472,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Root__ = __webpack_require__(135);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__configureStore__ = __webpack_require__(285);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__api__ = __webpack_require__(297);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__configureStore__ = __webpack_require__(286);
 
 
 
 
 
-
-
-Object(__WEBPACK_IMPORTED_MODULE_4__api__["a" /* fetchTodos */])('all').then(todos => console.log(todos) // eslint-disable-line no-console
-);
 
 const store = Object(__WEBPACK_IMPORTED_MODULE_3__configureStore__["a" /* default */])();
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Root__["a" /* default */], { store: store }), document.getElementById('root'));
@@ -48610,9 +48605,12 @@ function randomFillSync (buf, offset, size) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react_redux__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router_dom__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TodoList__ = __webpack_require__(281);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__reducers__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__TodoList__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reducers__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__api_index__ = __webpack_require__(285);
 
 
 
@@ -48620,11 +48618,33 @@ function randomFillSync (buf, offset, size) {
 
 
 
-const mapStateToProps = (state, ownProps) => ({
-    todos: Object(__WEBPACK_IMPORTED_MODULE_4__reducers__["b" /* getVisibleTodos */])(state, ownProps.match.params.filter || 'all')
-});
 
-const VisibleTodoList = Object(__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["d" /* withRouter */])(Object(__WEBPACK_IMPORTED_MODULE_0_react_redux__["b" /* connect */])(mapStateToProps, { onTodoClick: __WEBPACK_IMPORTED_MODULE_2__actions__["b" /* toggleTodo */] })(__WEBPACK_IMPORTED_MODULE_3__TodoList__["a" /* default */]));
+
+class VisibleTodoList extends __WEBPACK_IMPORTED_MODULE_2_react__["Component"] {
+    componentDidMount() {
+        Object(__WEBPACK_IMPORTED_MODULE_6__api_index__["a" /* fetchTodos */])(this.props.filter).then(todos => console.log(this.props.filter, todos));
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.filter !== prevProps.filter) {
+            Object(__WEBPACK_IMPORTED_MODULE_6__api_index__["a" /* fetchTodos */])(this.props.filter).then(todos => console.log(this.props.filter, todos));
+        }
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__TodoList__["a" /* default */], this.props);
+    }
+}
+
+const mapStateToProps = (state, { match }) => {
+    const filter = match.params.filter || 'all';
+    return {
+        todos: Object(__WEBPACK_IMPORTED_MODULE_5__reducers__["b" /* getVisibleTodos */])(state, filter),
+        filter
+    };
+};
+
+VisibleTodoList = Object(__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["d" /* withRouter */])(Object(__WEBPACK_IMPORTED_MODULE_0_react_redux__["b" /* connect */])(mapStateToProps, { onTodoClick: __WEBPACK_IMPORTED_MODULE_3__actions__["b" /* toggleTodo */] })(VisibleTodoList));
 
 /* harmony default export */ __webpack_exports__["a"] = (VisibleTodoList);
 
@@ -48769,11 +48789,56 @@ const todo = (state, action) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_node_uuid__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_node_uuid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_node_uuid__);
+
+
+// This is a fake in-memory implementation of something
+// that would be implemented by calling a REST server.
+
+const fakeDatabase = {
+    todos: [{
+        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
+        text: 'hey',
+        completed: true
+    }, {
+        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
+        text: 'ho',
+        completed: true
+    }, {
+        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
+        text: 'let’s go',
+        completed: false
+    }]
+};
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const fetchTodos = filter => delay(500).then(() => {
+    switch (filter) {
+        case 'all':
+            return fakeDatabase.todos;
+        case 'active':
+            return fakeDatabase.todos.filter(t => !t.completed);
+        case 'completed':
+            return fakeDatabase.todos.filter(t => t.completed);
+        default:
+            throw new Error(`Unknown filter: ${filter}`);
+    }
+});
+/* harmony export (immutable) */ __webpack_exports__["a"] = fetchTodos;
+
+
+/***/ }),
+/* 286 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_throttle__ = __webpack_require__(286);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_throttle__ = __webpack_require__(287);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_throttle___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash_throttle__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__localStorage__ = __webpack_require__(296);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__localStorage__ = __webpack_require__(297);
 
 
 
@@ -48809,10 +48874,10 @@ const configureStore = () => {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var debounce = __webpack_require__(287),
+var debounce = __webpack_require__(288),
     isObject = __webpack_require__(62);
 
 /** Error message constants. */
@@ -48884,12 +48949,12 @@ module.exports = throttle;
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(62),
-    now = __webpack_require__(288),
-    toNumber = __webpack_require__(290);
+    now = __webpack_require__(289),
+    toNumber = __webpack_require__(291);
 
 /** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -49080,7 +49145,7 @@ module.exports = debounce;
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(121);
@@ -49109,7 +49174,7 @@ module.exports = now;
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -49120,11 +49185,11 @@ module.exports = freeGlobal;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(62),
-    isSymbol = __webpack_require__(291);
+    isSymbol = __webpack_require__(292);
 
 /** Used as references for various `Number` constants. */
 var NAN = 0 / 0;
@@ -49192,11 +49257,11 @@ module.exports = toNumber;
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(292),
-    isObjectLike = __webpack_require__(295);
+var baseGetTag = __webpack_require__(293),
+    isObjectLike = __webpack_require__(296);
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
@@ -49227,12 +49292,12 @@ module.exports = isSymbol;
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(122),
-    getRawTag = __webpack_require__(293),
-    objectToString = __webpack_require__(294);
+    getRawTag = __webpack_require__(294),
+    objectToString = __webpack_require__(295);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -49261,7 +49326,7 @@ module.exports = baseGetTag;
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(122);
@@ -49313,7 +49378,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -49341,7 +49406,7 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ (function(module, exports) {
 
 /**
@@ -49376,7 +49441,7 @@ module.exports = isObjectLike;
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49405,51 +49470,6 @@ const saveState = state => {
     }
 };
 /* unused harmony export saveState */
-
-
-/***/ }),
-/* 297 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_node_uuid__ = __webpack_require__(86);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_node_uuid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_node_uuid__);
-
-
-// This is a fake in-memory implementation of something
-// that would be implemented by calling a REST server.
-
-const fakeDatabase = {
-    todos: [{
-        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
-        text: 'hey',
-        completed: true
-    }, {
-        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
-        text: 'ho',
-        completed: true
-    }, {
-        id: Object(__WEBPACK_IMPORTED_MODULE_0_node_uuid__["v4"])(),
-        text: 'let’s go',
-        completed: false
-    }]
-};
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-const fetchTodos = filter => delay(500).then(() => {
-    switch (filter) {
-        case 'all':
-            return fakeDatabase.todos;
-        case 'active':
-            return fakeDatabase.todos.filter(t => !t.completed);
-        case 'completed':
-            return fakeDatabase.todos.filter(t => t.completed);
-        default:
-            throw new Error(`Unknown filter: ${filter}`);
-    }
-});
-/* harmony export (immutable) */ __webpack_exports__["a"] = fetchTodos;
 
 
 /***/ })
