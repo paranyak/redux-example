@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
 
-
-const createList = (filter) => {
+const createList = (filter) => { // eslint-disable-line arrow-body-style
     const ids = (state = [], action) => {
-        if (action.filter !== filter) {
+        if (filter !== action.filter) {
             return state;
         }
         switch (action.type) {
@@ -13,6 +12,7 @@ const createList = (filter) => {
                 return state;
         }
     };
+
     const isFetching = (state = false, action) => {
         if (filter !== action.filter) {
             return state;
@@ -33,8 +33,7 @@ const createList = (filter) => {
     });
 };
 
-
 export default createList;
 
 export const getIds = (state) => state.ids;
-export const getIsFetching = (state) => state.isFetching;
+export const getIsFetching = state => state.isFetching;
